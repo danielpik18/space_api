@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\ApiResponser;
 use App\User;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     public function index()
     {
         $users = User::all();
-        return response()->json(['data' => $users], 200);
+
+        return $this->showAll($users);
     }
 
     public function show($id)
     {
         $user = User::findOrFail($id);
-        return response()->json(['data' => $user], 200);
+        return $this->showOne($user);
     }
 
     public function store(Request $request)
@@ -34,7 +36,7 @@ class UserController extends Controller
 
         $user = User::create($fields);
 
-        return response()->json(['data' => $user], 201);
+        return $this->showOne($user, 201);
     }
 
     public function update(Request $request, $id)
@@ -61,13 +63,10 @@ class UserController extends Controller
         }
 
         if (!$user->isDirty()) {
-            return response([
-                'error' => 'At least one value must be specified to update this record',
-                'code' => 422
-            ], 422);
+            return $this->errorResponse('At least one value must be specified to update this record', 422);
         } else {
             $user->save();
-            return response()->json(['data' => $user], 200);
+            return $this->showOne($user);
         }
     }
 
@@ -76,6 +75,6 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        return response()->json(['data' => $user], 200);
+        return $this->showOne($user);
     }
 }
