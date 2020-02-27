@@ -13,9 +13,8 @@ class TaskController extends ApiController
         return $this->showAll($tasks);
     }
 
-    public function show($id)
+    public function show(Task $task)
     {
-        $task = Task::findOrFail($id);
         return $this->showOne($task);
     }
 
@@ -35,10 +34,8 @@ class TaskController extends ApiController
         return $this->showOne($task, 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Task $task)
     {
-        $task = Task::findOrFail($id);
-
         $rules = [
             'title' => 'required',
             'priority' => 'in:1,2,3'
@@ -72,8 +69,7 @@ class TaskController extends ApiController
         }
     }
 
-    public function destroy($id){
-        $task = Task::findOrFail($id);
+    public function destroy(Task $task){
         $task->delete();
 
         return $this->showOne($task);
