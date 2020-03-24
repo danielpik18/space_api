@@ -8,5 +8,8 @@ class Task extends Model
 {
     protected $fillable = ['title', 'date', 'priority'];
 
-    public $timestamps = false;
+    public function taskCategory()
+    {
+        return $this->belongsTo('App\TaskCategory');
+    }
 }
