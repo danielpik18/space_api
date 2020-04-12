@@ -59,6 +59,7 @@ class Handler extends ExceptionHandler
      *
      * @throws \Exception
      */
+
     public function render($request, Exception $exception)
     {
         if ($exception instanceof ValidationException) {
@@ -87,7 +88,8 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof HttpException) {
-            return $this->errorResponse($exception->getMessage(), $exception->getCode());
+            // static status code, because $exception->getStatusCode(); returns 0, which apparently isn't valid
+            return $this->errorResponse($exception->getMessage(), 400);
         }
 
         if ($exception instanceof  QueryException) {
